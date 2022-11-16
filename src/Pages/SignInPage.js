@@ -1,17 +1,49 @@
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import logo from "../assets/MyWallet.png"
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../assets/MyWallet.png";
 
 
 export default function SignInPage() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    const formSignIn = {
+        email,
+        password
+    };
+
+    function emailHandler(e) {
+        e.preventDefault();
+        setEmail(e.target.value);
+        formSignIn.email = email;
+    };
+    function passwordHandler(e) {
+        e.preventDefault();
+        setPassword(e.target.value);
+        formSignIn.password = password;
+    };
+    function submitHandler(){
+        console.log(formSignIn);
+        axios.post("http://localhost:5000/signIn", formSignIn)
+        .then((res) =>{
+            console.log(res.data)
+            navigate("/logs")
+        })
+        .catch((err) =>{
+            console.log(err.response)
+        })
+    }
+    
     return (
         <Tela>
             <img src={logo} alt="logo" />
             <form>
-                <input type="email" placeholder="email"></input>
-                <input type="password" placeholder="senha"></input>
+                <input type="email" placeholder="email" onChange={(e) => emailHandler(e)} />
+                <input type="password" placeholder="senha" onChange={(e) => passwordHandler(e)} />
             </form>
-            <button>
+            <button onClick={() => submitHandler()} >
                 Entrar
             </button>
             <Link to="/cadastro">

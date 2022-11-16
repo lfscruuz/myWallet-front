@@ -1,19 +1,65 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/MyWallet.png";
 
 
 export default function SignUpPage() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
+    const formSignUp = {
+        name,
+        email,
+        password
+    };
+
+    function nameHandler(e) {
+        e.preventDefault();
+        setName(e.target.value);
+        formSignUp.name = name;
+    };
+    function emailHandler(e) {
+        e.preventDefault();
+        setEmail(e.target.value);
+        formSignUp.email = email;
+    };
+    function passwordHandler(e) {
+        e.preventDefault();
+        setPassword(e.target.value);
+    };
+    function confirmPasswordHandler(e) {
+        e.preventDefault();
+        setConfirmPassword(e.target.value);
+    };
+    function submitHandler() {
+        if (password === confirmPassword) {
+            formSignUp.password = confirmPassword;
+            axios.post("http://localhost:5000/signUp", formSignUp).then((res) => { 
+                console.log(res.data) 
+            })
+            .catch((err) => { 
+                console.log(err.response) 
+            })
+            navigate("/")
+        } else {
+            alert("as senhas não correspondem");
+        }
+    };
+
     return (
         <Tela>
             <img src={logo} alt="logo" />
             <form>
-                <input type="text" placeholder="nome" />
-                <input type="email" placeholder="email" />
-                <input type="password" placeholder="senha" />
-                <input type="password" placeholder="confirme a senha" />
+                <input type="text" placeholder="nome" onChange={(e) => nameHandler(e)} />
+                <input type="email" placeholder="email" onChange={(e) => emailHandler(e)} />
+                <input type="password" placeholder="senha" onChange={(e) => passwordHandler(e)} />
+                <input type="password" placeholder="confirme a senha" onChange={(e) => confirmPasswordHandler(e)} />
             </form>
-            <button>
+            <button onClick={() => submitHandler()} >
                 Cadastrar
             </button>
             <Link to="/">
@@ -21,7 +67,7 @@ export default function SignUpPage() {
             </Link>
 
         </Tela>
-    )
+    );
 }
 
 const Tela = styled.div`
