@@ -1,22 +1,55 @@
-import { Link } from "react-router-dom"
+import axios from "axios";
+import dayjs from "dayjs";
+import { useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
+import authContext from "../contexts/authContext";
 
-export default function NewExitPage() {
-    return (
+
+export default function NewEntryPage(){
+    const {token} = useContext(authContext);
+    const [value, setValue] = useState(0);
+    const [description, setDescription] = useState("")
+    const navigate = useNavigate();
+    const newEntryForm = {
+        date: dayjs().format("DD/MM"),
+        description,
+        value,
+        type: "minus"
+    }
+    function valueHanlder(e){
+        e.preventDefault();
+        setValue(Number(e.target.value));
+        newEntryForm.value = value;
+    }
+    function descriptionHandler(e){
+        e.preventDefault();
+        setDescription(e.target.value);
+        newEntryForm.description = description;
+    }
+    
+    function submitHandler(){
+        console.log(token)
+        axios.post("http://localhost:5000/registry", newEntryForm, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        }).then(
+            navigate("/registry")
+        ).catch((err) => console.log(err.response))
+    }
+    return(
         <Tela>
             <Topo>
-                <h1>Nova Saída</h1>
+                <h1>Nova saída</h1>
             </Topo>
             <form>
-                <input type="text" placeholder="valor" />
-                <input type="text" placeholder="descrição" />
+                <input type="text" placeholder="valor" onChange={(e) => valueHanlder(e)} />
+                <input type="text" placeholder="descrição" onChange={(e) => descriptionHandler(e)}/>
             </form>
-            <Link to="/registry">
-                <button>
+                <button onClick={submitHandler} >
                     Salvar Saída
                 </button>
-            </Link>
-
         </Tela>
     )
 }
@@ -40,16 +73,10 @@ const Tela = styled.div`
         border-radius: 5px;
         border: none;
     }
-    >a{
+    >button{
         border-radius: 5px;
         border: none;
         width: 90%;
-        height: 45px;
-    }
-    >a >button{
-        border-radius: 5px;
-        border: none;
-        width: 100%;
         height: 45px;
         font-size: 20px;
         color: #fff;

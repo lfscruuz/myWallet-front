@@ -1,13 +1,15 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/MyWallet.png";
+import authContext from "../contexts/authContext";
 
 
-export default function SignInPage() {
+export default function SignInPage({setName}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const {setToken} = useContext(authContext);
     const navigate = useNavigate();
     const formSignIn = {
         email,
@@ -24,12 +26,13 @@ export default function SignInPage() {
         setPassword(e.target.value);
         formSignIn.password = password;
     };
+
     function submitHandler(){
-        console.log(formSignIn);
-        axios.post("http://localhost:5000/signIn", formSignIn)
+        axios.post("http://localhost:5000/sign-in", formSignIn)
         .then((res) =>{
-            console.log(res.data)
-            navigate("/logs")
+            setToken(res.data.token)
+            setName(res.data.name)
+            navigate("/registry")
         })
         .catch((err) =>{
             console.log(err.response)

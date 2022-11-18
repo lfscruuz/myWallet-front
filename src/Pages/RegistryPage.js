@@ -1,34 +1,82 @@
-import styled from "styled-components"
-import leaveIcon from "../assets/log-out-outline.svg"
-import plusIcon from "../assets/add-circle-outline.svg"
-import minusIcon from "../assets/remove-circle-outline.svg"
-import { Link } from "react-router-dom"
-export default function RegistryPage() {
+import styled from "styled-components";
+import leaveIcon from "../assets/log-out-outline.svg";
+import plusIcon from "../assets/add-circle-outline.svg";
+import minusIcon from "../assets/remove-circle-outline.svg";
+import { Link } from "react-router-dom";
+import Instance from "../components/Instance";
+import { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import authContext from "../contexts/authContext";
+
+export default function RegistryPage({ name }) {
+    const {token} = useContext(authContext);
+    const [registry, setRegistry] = useState([0, 1, 2]);
+    const [hasItems, setHasItems] = useState(true);
+    const [soma, setSoma] = useState(0);
+
+    console.log(token)
+
+    useEffect(() => {
+        axios.get("http://localhost:5000/registry", {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                setRegistry(res.data)
+                setHasItems(true)
+                calculaTotal(res.data)
+            })
+            .catch((err) => {
+                console.log(err.response)
+            })
+    }, [])
+
+    function calculaTotal(r) {
+        const arraySoma = []
+        let novaSoma = 0;
+        r.forEach(element => {
+            let newValue = 0
+            if (element.type === "minus"){
+                newValue = -element.value
+                arraySoma.push(newValue)
+            } else{
+                arraySoma.push(element.value)
+            }
+            
+        });
+        for (let i = 0; i < arraySoma.length; i++){
+            novaSoma += arraySoma[i]
+        }
+        setSoma(novaSoma)
+    }
+
     return (
         <Tela>
             <Topo>
-                <h1>Olá Fulano!</h1>
+                <h1>Olá {name}!</h1>
                 <Link to="/">
                     <img src={leaveIcon} alt="logout icon" />
                 </Link>
             </Topo>
             <Registry>
-                {/* <h1>Não há registros de entrada ou saída</h1> */}
-                <Log>
-                    <Instance>
-                        <p className="date" >31/10</p>
-                        <p className="description" >almoço mãe</p>
-                        <p className="value" >R$20,00</p>
-                    </Instance>
-                    <Instance>
-                        <p className="date" >31/10</p>
-                        <p className="description" >almoço mãe</p>
-                        <p className="value" >R$20,00</p>
-                    </Instance>
+                <Log hasItems={hasItems}>
+                    {hasItems === false ? <h1>Não há registros de entrada ou saída</h1> :
+
+                        registry.map((m) => {
+                            return (
+                                <Instance registry={m} soma={soma} setSoma={setSoma} />
+                            )
+                        })
+                    }
                 </Log>
-                <Total>
-                    <p>Saldo</p>
-                    <p className="value" >R$20,00</p>
+                <Total soma={soma} >
+                    {hasItems === false ? "" :
+                        <>
+                            <p>Saldo</p>
+                            <p className="value" >R${soma}</p>
+                        </>
+                    }
                 </Total>
             </Registry>
             <Bottom>
@@ -46,8 +94,8 @@ export default function RegistryPage() {
                 </Link>
             </Bottom>
         </Tela>
-    )
-}
+    );
+};
 
 const Tela = styled.div`
     position: absolute;
@@ -57,7 +105,7 @@ const Tela = styled.div`
     flex-direction: column;
     width: 100%;
     height: 100%;
-`
+`;
 const Topo = styled.div`
     height: 10%;
     margin: 2.5%, 0;
@@ -69,12 +117,12 @@ const Topo = styled.div`
         font-size: 30px;
         font-weight: 700;
         color: #fff;
-    }
+    };
     >a >img{
         width: 35px;
-    }
+    };
 
-`
+`;
 const Registry = styled.div`
     padding: 2.5% 0;
     width: 90%;
@@ -84,34 +132,18 @@ const Registry = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    /* justify-content: center; */
-    justify-content: space-between;
-`
+    justify-content: ${props => props.hasItems === true ? "flex-start" : "center"};
+`;
 
 const Log = styled.div`
     width: 90%;
     height: 92.5%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: ${props => props.hasItems === false ? "center" : "flex-start"};
     overflow-y: scroll;
-`
-
-const Instance = styled.div`
-        margin-bottom: 5px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    >p{
-        font-size: 15px;
-    }
-    >.date{
-        color: #C6C6C6;
-    }
-    >.value{
-        color: red;
-    }
-`
+`;
 
 const Total = styled.div`
     height: 7.5%;
@@ -121,11 +153,11 @@ const Total = styled.div`
     align-items: center;
     >p{
         font-size: 20px;
-    }
+    };
     >.value{
-        color: red;
-    }
-`
+        color: ${props => props.soma < 0 ? "red" : "green"};
+    };
+`;
 
 const Bottom = styled.div`
     width: 90%;
@@ -138,7 +170,7 @@ const Bottom = styled.div`
         text-decoration: none;
         border: none;
         border-radius: 2%;
-    }
+    };
     >a >button{
         width: 100%;
         height: 100%;
@@ -148,14 +180,14 @@ const Bottom = styled.div`
         flex-direction: column;
         justify-content: space-between;
         padding: 10px;
-    }
+    };
     >a >button >img{
         display: flex;
         width: 40px;
-    }
+    };
     >a >button >p{
         color: #fff;
         font-size: 23px;
         max-width: 20%;
-    }
-`
+    };
+`;

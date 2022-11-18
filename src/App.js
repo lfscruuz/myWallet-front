@@ -5,18 +5,24 @@ import RegistryPage from "./Pages/RegistryPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NewEntryPage from "./Pages/NewEntryPage";
 import NewExitPage from "./Pages/NewExitpage";
+import { useState } from "react";
+import { AuthProvider } from "./contexts/authContext";
 
 export default function App() {
+    const [name, setName] = useState("");
+
     return (
-        <BrowserRouter>
-            <GlobalStyle />
-            <Routes>
-                <Route path="/" element={<SignInPage />} />
-                <Route path="/cadastro" element={<SignUpPage />} />
-                <Route path="/registry" element={<RegistryPage />} />
-                <Route path="/newEntry" element={<NewEntryPage />} />
-                <Route path="/newExit" element={<NewExitPage />} />
-            </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <GlobalStyle />
+                <Routes>
+                    <Route path="/" element={<SignInPage name={name} setName={setName} />} />
+                    <Route path="/cadastro" element={<SignUpPage name={name} setName={setName} />} />
+                    <Route path="/registry" element={<RegistryPage name={name} />} />
+                    <Route path="/newEntry" element={<NewEntryPage />} />
+                    <Route path="/newExit" element={<NewExitPage />} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     )
 }

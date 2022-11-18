@@ -5,8 +5,7 @@ import styled from "styled-components";
 import logo from "../assets/MyWallet.png";
 
 
-export default function SignUpPage() {
-    const [name, setName] = useState("");
+export default function SignUpPage({name, setName}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -38,7 +37,7 @@ export default function SignUpPage() {
     function submitHandler() {
         if (password === confirmPassword) {
             formSignUp.password = confirmPassword;
-            axios.post("http://localhost:5000/signUp", formSignUp).then((res) => { 
+            axios.post("http://localhost:5000/sign-up", formSignUp).then((res) => { 
                 console.log(res.data) 
             })
             .catch((err) => { 
