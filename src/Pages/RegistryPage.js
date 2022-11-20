@@ -11,10 +11,8 @@ import authContext from "../contexts/authContext";
 export default function RegistryPage({ name }) {
     const {token} = useContext(authContext);
     const [registry, setRegistry] = useState([0, 1, 2]);
-    const [hasItems, setHasItems] = useState(true);
+    const [hasItems, setHasItems] = useState(false);
     const [soma, setSoma] = useState(0);
-
-    console.log(token)
 
     useEffect(() => {
         axios.get("http://localhost:5000/registry", {
@@ -24,13 +22,23 @@ export default function RegistryPage({ name }) {
         })
             .then((res) => {
                 setRegistry(res.data)
-                setHasItems(true)
+                if (res.data.length !== 0){
+                    setHasItems(true)
+                }
                 calculaTotal(res.data)
             })
             .catch((err) => {
                 console.log(err.response)
             })
     }, [])
+
+    function SignOut(){
+        axios.delete("http://localhost:5000/sign-out", {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+    }
 
     function calculaTotal(r) {
         const arraySoma = []
@@ -56,7 +64,7 @@ export default function RegistryPage({ name }) {
             <Topo>
                 <h1>Olá {name}!</h1>
                 <Link to="/">
-                    <img src={leaveIcon} alt="logout icon" />
+                    <img src={leaveIcon} onClick={SignOut} alt="logout icon" />
                 </Link>
             </Topo>
             <Registry>

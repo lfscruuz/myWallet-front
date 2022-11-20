@@ -29,7 +29,6 @@ export default function NewEntryPage(){
     }
     
     function submitHandler(){
-        console.log(token)
         axios.post("http://localhost:5000/registry", newEntryForm, {
             headers: {
                 authorization: `Bearer ${token}`
