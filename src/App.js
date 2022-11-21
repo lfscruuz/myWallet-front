@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import GlobalStyle from "./constants/GlobalStyles"
+import SignInPage from "./Pages/SignInPage"
+import SignUpPage from "./Pages/SignUpPage";
+import RegistryPage from "./Pages/RegistryPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import NewEntryPage from "./Pages/NewEntryPage";
+import NewExitPage from "./Pages/NewExitpage";
+import { useState } from "react";
+import { AuthProvider } from "./contexts/authContext";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const [name, setName] = useState("");
+
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <GlobalStyle />
+                <Routes>
+                    <Route path="/" element={<SignInPage name={name} setName={setName} />} />
+                    <Route path="/cadastro" element={<SignUpPage name={name} setName={setName} />} />
+                    <Route path="/registry" element={<RegistryPage name={name} />} />
+                    <Route path="/newEntry" element={<NewEntryPage />} />
+                    <Route path="/newExit" element={<NewExitPage />} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    )
 }
-
-export default App;
