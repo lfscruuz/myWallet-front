@@ -35,7 +35,6 @@ export default function SignInPage({setName}) {
             navigate("/registry")
         })
         .catch((err) =>{
-            console.log(err.response)
             if (err.response.status === 401){
                 if (err.response.data === "usuário não encontrado"){
                     alert("usuário não encontrado")

@@ -38,12 +38,15 @@ export default function SignUpPage({name, setName}) {
         if (password === confirmPassword) {
             formSignUp.password = confirmPassword;
             axios.post("http://localhost:5000/sign-up", formSignUp).then((res) => { 
-                console.log(res.data) 
+                navigate("/")
             })
             .catch((err) => { 
-                console.log(err.response) 
+                if (err.response.status === 409){
+                    if (err.response.data === "usuário já existe"){
+                        alert("usuário já existe")
+                    }
+                }
             })
-            navigate("/")
         } else {
             alert("as senhas não correspondem");
         }
