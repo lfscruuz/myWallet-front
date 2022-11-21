@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import leaveIcon from "../assets/log-out-outline.svg";
-import plusIcon from "../assets/add-circle-outline.svg";
-import minusIcon from "../assets/remove-circle-outline.svg";
+import leaveIcon from "../assets/svgtopng/log-out-outline.png";
+import plusIcon from "../assets/svgtopng/add-circle-outline.png";
+import minusIcon from "../assets/svgtopng/remove-circle-outline.png";
 import { Link } from "react-router-dom";
 import Instance from "../components/Instance";
 import { useEffect, useState, useContext } from "react";
