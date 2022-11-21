@@ -7,6 +7,7 @@ import Instance from "../components/Instance";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import authContext from "../contexts/authContext";
+import { API_URI } from "../constants/LinksAPI";
 
 export default function RegistryPage({ name }) {
     const {token} = useContext(authContext);
@@ -15,7 +16,7 @@ export default function RegistryPage({ name }) {
     const [soma, setSoma] = useState(0);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/registry", {
+        axios.get(`${API_URI}/registry`, {
             headers: {
                 authorization: `Bearer ${token}`
             }
@@ -33,7 +34,7 @@ export default function RegistryPage({ name }) {
     }, [token])
 
     function SignOut(){
-        axios.delete("http://localhost:5000/sign-out", {
+        axios.delete(`${API_URI}/sign-out`, {
             headers: {
                 authorization: `Bearer ${token}`
             }

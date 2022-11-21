@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/MyWallet.png";
+import { API_URI } from "../constants/LinksAPI";
 
 
 export default function SignUpPage({name, setName}) {
@@ -37,7 +38,7 @@ export default function SignUpPage({name, setName}) {
     function submitHandler() {
         if (password === confirmPassword) {
             formSignUp.password = confirmPassword;
-            axios.post("http://localhost:5000/sign-up", formSignUp).then((res) => { 
+            axios.post(`${API_URI}/sign-up`, formSignUp).then((res) => { 
                 navigate("/")
             })
             .catch((err) => { 

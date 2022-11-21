@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
+import { API_URI } from "../constants/LinksAPI";
 import authContext from "../contexts/authContext";
 
 
@@ -27,7 +28,7 @@ export default function NewEntryPage(){
     }
     
     function submitHandler(){
-        axios.post("http://localhost:5000/registry", newEntryForm, {
+        axios.post(`${API_URI}/registry`, newEntryForm, {
             headers: {
                 authorization: `Bearer ${token}`
             }

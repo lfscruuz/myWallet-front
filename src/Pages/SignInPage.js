@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/MyWallet.png";
+import { API_URI } from "../constants/LinksAPI";
 import authContext from "../contexts/authContext";
 
 
@@ -28,7 +29,7 @@ export default function SignInPage({setName}) {
     };
 
     function submitHandler(){
-        axios.post("http://localhost:5000/sign-in", formSignIn)
+        axios.post(`${API_URI}/sign-in`, formSignIn)
         .then((res) =>{
             setToken(res.data.token)
             setName(res.data.name)
