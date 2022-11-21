@@ -30,7 +30,7 @@ export default function RegistryPage({ name }) {
             .catch((err) => {
                 console.log(err.response)
             })
-    }, [])
+    }, [token])
 
     function SignOut(){
         axios.delete("http://localhost:5000/sign-out", {
@@ -71,9 +71,9 @@ export default function RegistryPage({ name }) {
                 <Log hasItems={hasItems}>
                     {hasItems === false ? <h1>Não há registros de entrada ou saída</h1> :
 
-                        registry.map((m) => {
+                        registry.map((m, i) => {
                             return (
-                                <Instance registry={m} soma={soma} setSoma={setSoma} />
+                                <Instance registry={m} soma={soma} setSoma={setSoma} key={i}/>
                             )
                         })
                     }
@@ -94,13 +94,13 @@ export default function RegistryPage({ name }) {
             <Bottom>
                 <Link to="/newEntry">
                     <button>
-                        <img src={plusIcon} />
+                        <img src={plusIcon} alt="plus-icon" />
                         <p>Nova entrada</p>
                     </button>
                 </Link>
                 <Link to="/newExit" >
                     <button>
-                        <img src={minusIcon} />
+                        <img src={minusIcon} alt="minus-icon" />
                         <p>Nova saída</p>
                     </button>
                 </Link>
