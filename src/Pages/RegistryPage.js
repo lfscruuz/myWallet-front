@@ -56,7 +56,7 @@ export default function RegistryPage({ name }) {
         for (let i = 0; i < arraySoma.length; i++){
             novaSoma += arraySoma[i]
         }
-        setSoma(novaSoma)
+        setSoma(novaSoma.toFixed(2))
     }
 
     return (
@@ -82,7 +82,11 @@ export default function RegistryPage({ name }) {
                     {hasItems === false ? "" :
                         <>
                             <p>Saldo</p>
-                            <p className="value" >R${soma}</p>
+                            {soma < 0 ? 
+                            <p className="value" >-R${Math.abs(soma)}</p>
+                            :
+                            <p className="value" >R${Math.abs(soma)}</p>
+                        }
                         </>
                     }
                 </Total>

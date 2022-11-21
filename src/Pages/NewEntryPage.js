@@ -12,7 +12,6 @@ export default function NewEntryPage(){
     const [description, setDescription] = useState("")
     const navigate = useNavigate();
     const newEntryForm = {
-        date: dayjs().format("DD/MM"),
         description,
         value,
         type: "plus"
